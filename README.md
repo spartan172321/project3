@@ -1,5 +1,8 @@
 # Tagger
-Tag locations for plans on the fly
+Tag locations for plans on the fly!
+
+RUTSOM201705FSF-FT
+[Cheng Rong, Tsu Tang Hsu,Tracy Kubert]
 
 Frontend: 
 - Bootstrap
