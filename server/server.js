@@ -24,9 +24,15 @@ app.use(express.static("build"));
 
 // -------------------------------------------------
 
-// MongoDB configuration (Change this URL to your own DB)
-mongoose.connect("mongodb://localhost/MERN");
-var db = mongoose.connection;
+// MongoDB configuration 
+
+if (process.env.MONGODB_URI) {
+  mongoose.connect(process.env.MONGODB_URI)
+} else {
+  mongoose.connect('mongodb://localhost/tagger') // local mongo url
+}
+
+const db = mongoose.connection;
 
 db.on("error", function(err) {
   console.log("Mongoose Error: ", err);
@@ -35,6 +41,16 @@ db.on("error", function(err) {
 db.once("open", function() {
   console.log("Mongoose connection successful.");
 });
+
+// ==== if its production environment!
+if (process.env.NODE_ENV === 'production') {
+  const path = require('path')
+  console.log('YOU ARE IN THE PRODUCTION ENV')
+  app.use('/static', express.static(path.join(__dirname, '../build/static')))
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../build/'))
+  })
+}
 
 // -------------------------------------------------
 
