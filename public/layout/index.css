@@ -109,7 +109,6 @@ body {
   color:#333;
   font-weight: 400;
   font-size: 36px;
-  min-width: 550px;
 }
 
 .tag-location {
@@ -148,15 +147,7 @@ textarea[type="text"] { border: none }
 
 .tag-description-view {
   width: 100%;
-  height: 100%;
   margin-top: 10px;
-}
-
-textarea {
-  overflow: hidden;
-  width: 100%;
-  height: 200px;
-
 }
 
 .bottom-buttons {
