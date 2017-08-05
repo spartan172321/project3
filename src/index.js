@@ -1,10 +1,12 @@
-// Include the Main React Dependencies
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App.js';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import App from './App.jsx'
+// import './index.css'
+import { BrowserRouter } from 'react-router-dom'
 
-// Include the main Main Component
-import Main from './components/Main.jsx';
-
-// This code here allows us to render our main component (in this case Parent)
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(
+	<BrowserRouter>
+		<App />
+	</BrowserRouter>,
+	document.getElementById('root')
+)

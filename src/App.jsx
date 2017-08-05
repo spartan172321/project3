@@ -1,14 +1,22 @@
 // Include React
 import React, { Component } from 'react'
+import './App.css'
 import { Route, Link } from 'react-router-dom'
+import Main from './components/Main.jsx'
+import Header from './components/Header.jsx'
+
 
 class App extends Component {
 	render() {
-		return() {
+		return(
 			<div className="App">
-				<h2>Welcome to Tagger!</h2>
+
+			<Header />
+			<Main />
+
 			</div>
-		}
+		
+	)
 	}
 }
 

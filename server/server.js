@@ -4,8 +4,9 @@ var bodyParser = require("body-parser");
 var logger = require("morgan");
 var mongoose = require("mongoose");
 
-// Require Click schema
-var Click = require("./models/click");
+// Require Mongoose schemas
+var Tag = require("./models/tag");
+var User = require("./models/user");
 
 // Create a new express app
 var app = express();
@@ -23,9 +24,15 @@ app.use(express.static("build"));
 
 // -------------------------------------------------
 
-// MongoDB configuration (Change this URL to your own DB)
-mongoose.connect("mongodb://localhost/MERN");
-var db = mongoose.connection;
+// MongoDB configuration 
+
+if (process.env.MONGODB_URI) {
+  mongoose.connect(process.env.MONGODB_URI)
+} else {
+  mongoose.connect('mongodb://localhost/tagger') // local mongo url
+}
+
+const db = mongoose.connection;
 
 db.on("error", function(err) {
   console.log("Mongoose Error: ", err);
@@ -35,57 +42,22 @@ db.once("open", function() {
   console.log("Mongoose connection successful.");
 });
 
-// -------------------------------------------------
-
-// Main "/" Route. This will redirect the user to our rendered React application
-app.get("/", function(req, res) {
-  res.sendFile(__dirname + "/build/static/index.html");
-});
-
-// This is the route we will send GET requests to retrieve our most recent click data.
-// We will call this route the moment our page gets rendered
-app.get("/api", function(req, res) {
-
-  // This GET request will search for the latest clickCount
-  Click.find({}).exec(function(err, doc) {
-
-    if (err) {
-      console.log(err);
-    }
-    else {
-      res.send(doc);
-    }
-  });
-});
-
-// This is the route we will send POST requests to save each click.
-// We will call this route the moment the "click" or "reset" button is pressed.
-app.post("/api", function(req, res) {
-
-  var clickID = req.body.clickID;
-  var clicks = parseInt(req.body.clicks);
-
-  // Note how this route utilizes the findOneAndUpdate function to update the clickCount
-  // { upsert: true } is an optional object we can pass into the findOneAndUpdate method
-  // If included, Mongoose will create a new document matching the description if one is not found
-  Click.findOneAndUpdate({
-    clickID: clickID
-  }, {
-    $set: {
-      clicks: clicks
-    }
-  }, { upsert: true }).exec(function(err) {
-
-    if (err) {
-      console.log(err);
-    }
-    else {
-      res.send("Updated Click Count!");
-    }
-  });
-});
+// ==== if its production environment!
+if (process.env.NODE_ENV === 'production') {
+  const path = require('path')
+  console.log('YOU ARE IN THE PRODUCTION ENV')
+  app.use('/static', express.static(path.join(__dirname, '../build/static')))
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../build/'))
+  })
+}
 
 // -------------------------------------------------
+
+// Routes
+// =============================================================
+require("./controller/apiRoutes.js")(app);
+
 
 // Starting our express server
 app.listen(PORT, function() {

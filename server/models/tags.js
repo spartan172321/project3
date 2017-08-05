@@ -3,18 +3,37 @@ var mongoose = require("mongoose");
 
 var Schema = mongoose.Schema;
 
-// Create a Schema for capturing clicks. We'll use clickID to update the same clickCounter
-var ClickSchema = new Schema({
-  clicks: {
-    type: Number
+// Create a Schema for saving Tags. 
+var TagSchema = new Schema({
+  title: {
+    type: String,
+    trim: true,
+    required: "Title is required"
   },
-  clickID: {
-    type: String
+  body: {
+  	type: String,
+    trim: true
+  },
+  location : {
+        type: [Number],
+        index:'2d',
+        required: "Location is needed"
+    },
+    userCreated: {
+    	type: Date,
+    default: Date.now
+    },
+    expires: {
+    	type: Number,
+    	default: -1
+    },
+  public: {
+    type: Boolean
   }
 });
 
 // Create the Model
-var Click = mongoose.model("Click", ClickSchema);
+const Tag = mongoose.model("Tag", TagSchema);
 
 // Export it for use elsewhere
-module.exports = Click;
+module.exports = Tag;
